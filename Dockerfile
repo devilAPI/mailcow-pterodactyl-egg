@@ -1,25 +1,28 @@
-# Use the official Pterodactyl Docker yolk as base
-FROM ghcr.io/pterodactyl/yolks:docker
+# Use a lightweight Debian base
+FROM debian:bullseye-slim
 
-# Install additional utilities required by the egg's install script and mailcow
+# Install Docker CLI and required tools
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        git \
-        curl \
         ca-certificates \
+        curl \
+        git \
         sed \
         grep \
-        && apt-get clean \
-        && rm -rf /var/lib/apt/lists/*
+        && \
+    # Install Docker CLI using the official convenience script
+    curl -fsSL https://get.docker.com -o get-docker.sh && \
+    sh get-docker.sh && \
+    # Clean up
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* get-docker.sh
 
-# Ensure docker-compose (the standalone command) is available
-# The base image already has docker-compose-plugin, which provides both
-# 'docker compose' and (usually) a symlink at /usr/local/bin/docker-compose.
-# But to be safe, we create the symlink explicitly if it's missing.
+# Ensure the docker-compose plugin is available (creates a symlink if needed)
 RUN if [ ! -f /usr/local/bin/docker-compose ]; then \
         ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose; \
     fi
 
-# Switch to the non‑root user expected by Pterodactyl
+# Create and switch to a non-root user (Pterodactyl expects this)
+RUN useradd -m -d /home/container -s /bin/bash container
 USER container
 WORKDIR /home/container
