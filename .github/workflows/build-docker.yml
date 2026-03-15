@@ -32,7 +32,7 @@ jobs:
       - name: Push Docker image
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-          docker push devilapi/navidrome-pterodactyl:latest
+          docker push devilapi/mailcow-ptero:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
