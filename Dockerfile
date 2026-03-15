@@ -13,6 +13,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* get-docker.sh
 
+RUN git clone https://github.com/mailcow/mailcow-dockerized.git /usr/src/mailcow
+
 RUN if [ ! -f /usr/local/bin/docker-compose ]; then \
         ln -s /usr/libexec/docker/cli-plugins/docker-compose /usr/local/bin/docker-compose; \
     fi
