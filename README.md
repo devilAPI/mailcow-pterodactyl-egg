@@ -1,2 +1,2 @@
 # mailcow-pterodactyl-egg
-mailcow for pterodactyl
+mailcow-dockerized as a pterodactyl egg
